@@ -4,9 +4,6 @@ import authRoutes from './routes/authRoutes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
 import morgan from 'morgan'
-import dotenv from 'dotenv'
-
-dotenv.config();
 
 const app = express();
 
