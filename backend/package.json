@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon dist/server.js"
+    "dev": "tsc && nodemon dist/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
