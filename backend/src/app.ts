@@ -3,15 +3,16 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
-import morgan from 'morgan'
+import morganMiddleware from './config/morgan.js';
+import Logger from './utils/logger.js';
 
 const app = express();
 
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use(helmet);
-app.use(morgan("dev"));
+app.use(helmet());
+app.use(morganMiddleware);
 
 
 //routes
