@@ -1,5 +1,5 @@
 import {Schema, model } from "mongoose";
-import {IResource} from "../types/resource.type";
+import type {IResource} from "../types/resource.type.js";
 
 const resourceSchema = new Schema<IResource>({
     

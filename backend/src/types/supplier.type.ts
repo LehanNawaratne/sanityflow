@@ -13,5 +13,4 @@ export interface ISupplier extends Document {
     createdAt?: Date;
     updatedAt?: Date;
     
-
 }

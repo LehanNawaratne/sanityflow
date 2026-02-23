@@ -1,6 +1,5 @@
 import {Schema, model} from "mongoose";
-import {IInventoryTransaction} from "../types/inventoryTransaction.type";
-import { required } from "zod/mini";
+import type {IInventoryTransaction} from "../types/inventoryTransaction.type.js";
 
 const inventoryTransactionSchema =  new Schema<IInventoryTransaction>(
 {
