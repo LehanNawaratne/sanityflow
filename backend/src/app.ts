@@ -4,6 +4,7 @@ import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
 import waterTestRoutes from './routes/waterTestRoutes.js';
 import distributionOrderRoutes from './routes/distributionOrderRoutes.js';
+import beneficiaryRoutes from './routes/beneficiaryRoutes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
 import morgan from 'morgan'
@@ -22,6 +23,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/issues', issueRoutes);
 app.use('/api/v1/water-tests', waterTestRoutes);
 app.use('/api/v1/distributions', distributionOrderRoutes);
+app.use('/api/v1/beneficiaries', beneficiaryRoutes);
 
 
 app.use(errorHandler);
