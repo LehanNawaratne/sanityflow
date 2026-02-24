@@ -1,21 +1,22 @@
 import type { Request, Response, NextFunction } from 'express';
-import WaterQualityTest from '../models/WaterQualityTest.js';
+import { 
+  createWaterTestService, 
+  getAllWaterTestsService, 
+  updateWaterTestService, 
+  deleteWaterTestService 
+} from '../services/waterTestService.js';
 import { createWaterTestSchema, updateWaterTestSchema } from '../types/issueSchemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // Create a new water quality test
-export const createWaterTest = async (req: Request, res: Response, next: NextFunction) => {
+export const createWaterTestController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Validate input
     const validatedData = createWaterTestSchema.parse(req.body);
 
-    // Create test
-    const test = new WaterQualityTest({
-      ...validatedData,
-      tester: (req as any).userId
-    });
+    // Call service for business logic
+    const test = await createWaterTestService(validatedData, (req as any).userId);
 
-    await test.save();
     res.status(HTTP_STATUS.CREATED).json(test);
   } catch (error) {
     next(error);
@@ -23,9 +24,9 @@ export const createWaterTest = async (req: Request, res: Response, next: NextFun
 };
 
 // Get all water quality tests
-export const getWaterTests = async (req: Request, res: Response, next: NextFunction) => {
+export const getWaterTestsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tests = await WaterQualityTest.find().populate('tester', 'name email');
+    const tests = await getAllWaterTestsService();
     res.json(tests);
   } catch (error) {
     next(error);
@@ -33,15 +34,12 @@ export const getWaterTests = async (req: Request, res: Response, next: NextFunct
 };
 
 // Update a water quality test
-export const updateWaterTest = async (req: Request, res: Response, next: NextFunction) => {
+export const updateWaterTestController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const validatedData = updateWaterTestSchema.parse(req.body);
 
-    const test = await WaterQualityTest.findByIdAndUpdate(id, validatedData, { new: true });
-    if (!test) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({ error: 'Water quality test not found' });
-    }
+    const test = await updateWaterTestService(id, validatedData);
 
     res.json(test);
   } catch (error) {
@@ -50,13 +48,10 @@ export const updateWaterTest = async (req: Request, res: Response, next: NextFun
 };
 
 // Delete a water quality test
-export const deleteWaterTest = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteWaterTestController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const test = await WaterQualityTest.findByIdAndDelete(id);
-    if (!test) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({ error: 'Water quality test not found' });
-    }
+    const id = req.params.id as string;
+    await deleteWaterTestService(id);
 
     res.json({ message: 'Water quality test deleted successfully' });
   } catch (error) {
