@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 
-interface IDistributionOrder extends Document {
+export interface IDistributionOrder extends Document {
   resource: string;
   quantity: number;
   targetLocation: string;
