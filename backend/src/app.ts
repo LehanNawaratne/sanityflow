@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
+import issueRoutes from './routes/issueRoutes.js';
+import waterTestRoutes from './routes/waterTestRoutes.js';
+import distributionOrderRoutes from './routes/distributionOrderRoutes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
 import morganMiddleware from './config/morgan.js';
@@ -17,6 +20,9 @@ app.use(morganMiddleware);
 
 //routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/issues', issueRoutes);
+app.use('/api/v1/water-tests', waterTestRoutes);
+app.use('/api/v1/distributions', distributionOrderRoutes);
 
 
 app.use(errorHandler);
