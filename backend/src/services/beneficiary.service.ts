@@ -1,6 +1,6 @@
-import Beneficiary from '../models/Beneficiary';
+import Beneficiary from '../models/Beneficiary.js';
 import mongoose from 'mongoose';
-import { IBeneficiary } from '../models/Beneficiary';
+import type { IBeneficiary } from '../models/Beneficiary.js';
 
 export const createBeneficiary = async (data: Partial<IBeneficiary>) => {
   // TODO: Send notification to beneficiary (if needed)
