@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 
-interface IWaterQualityTest extends Document {
+export interface IWaterQualityTest extends Document {
   location: string;
   testDate: Date;
   pH: number;
