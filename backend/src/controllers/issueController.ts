@@ -1,21 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
-import Issue from '../models/Issue.js';
-import { createIssueSchema, updateIssueStatusSchema } from '../types/issueSchemas.js';
+import { createNewIssue, getAllIssuesService, updateIssueStatusService } from '../services/issueService.js';
+import { createIssueSchema, updateIssueStatusSchema, type UpdateIssueStatusData } from '../types/issueSchemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // Create a new issue
-export const createIssue = async (req: Request, res: Response, next: NextFunction) => {
+export const createIssueController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Validate input
     const validatedData = createIssueSchema.parse(req.body);
 
-    // Create issue
-    const issue = new Issue({
-      ...validatedData,
-      reporter: (req as any).userId
-    });
+    // Call service for business logic
+    const issue = await createNewIssue(validatedData, (req as any).userId);
 
-    await issue.save();
     res.status(HTTP_STATUS.CREATED).json(issue);
   } catch (error) {
     next(error);
@@ -23,9 +19,9 @@ export const createIssue = async (req: Request, res: Response, next: NextFunctio
 };
 
 // Get all issues
-export const getIssues = async (req: Request, res: Response, next: NextFunction) => {
+export const getIssuesController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const issues = await Issue.find().populate('reporter', 'name email');
+    const issues = await getAllIssuesService();
     res.json(issues);
   } catch (error) {
     next(error);
@@ -33,15 +29,16 @@ export const getIssues = async (req: Request, res: Response, next: NextFunction)
 };
 
 // Update issue status
-export const updateIssueStatus = async (req: Request, res: Response, next: NextFunction) => {
+export const updateIssueStatusController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const validatedData = updateIssueStatusSchema.parse(req.body);
-
-    const issue = await Issue.findByIdAndUpdate(id, validatedData, { new: true });
-    if (!issue) {
-      return res.status(HTTP_STATUS.NOT_FOUND).json({ error: 'Issue not found' });
+    const id = req.params.id as string;
+    const parseResult = updateIssueStatusSchema.safeParse(req.body);
+    
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Invalid status' });
     }
+
+    const issue = await updateIssueStatusService(id, parseResult.data.status as 'Pending' | 'In Progress' | 'Resolved');
 
     res.json(issue);
   } catch (error) {

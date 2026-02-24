@@ -11,6 +11,8 @@ export const updateIssueStatusSchema = z.object({
   status: z.enum(['Pending', 'In Progress', 'Resolved'])
 });
 
+export type UpdateIssueStatusData = z.infer<typeof updateIssueStatusSchema>;
+
 // Schema for creating a new water quality test
 export const createWaterTestSchema = z.object({
   location: z.string().min(1, 'Location is required'),

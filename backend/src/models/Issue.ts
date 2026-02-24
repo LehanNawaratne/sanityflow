@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 
-interface IIssue extends Document {
+export interface IIssue extends Document {
   description: string;
   location: string;
   status: 'Pending' | 'In Progress' | 'Resolved';
