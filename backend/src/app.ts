@@ -11,7 +11,7 @@ const app = express();
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use(helmet);
+app.use(helmet());
 app.use(morgan("dev"));
 
 
