@@ -1,11 +1,11 @@
-import DistributionOrder from '../models/DistributionOrder';
+import DistributionOrder from '../models/DistributionOrder.js';
 import mongoose from 'mongoose';
 
 export const createDistributionOrder = async (data: {
   resource: string;
   quantity: number;
   targetLocation: string;
-  notes?: string;
+  notes?: string | undefined;
   createdBy: string;
 }) => {
   // TODO: Check inventory stock availability (handled by inventory team)
@@ -53,7 +53,7 @@ export const getDistributionOrderById = async (id: string) => {
 
 export const updateDistributionOrder = async (
   id: string,
-  data: { driver?: string; notes?: string }
+  data: { driver?: string | undefined; notes?: string | undefined }
 ) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Invalid order ID');
