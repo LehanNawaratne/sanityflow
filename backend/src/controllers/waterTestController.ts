@@ -3,7 +3,9 @@ import {
   createWaterTestService, 
   getAllWaterTestsService, 
   updateWaterTestService, 
-  deleteWaterTestService 
+  deleteWaterTestService,
+  getWaterTestByIdService,
+  getWaterTestAnalyticsService
 } from '../services/waterTestService.js';
 import { createWaterTestSchema, updateWaterTestSchema } from '../types/issueSchemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
@@ -26,7 +28,19 @@ export const createWaterTestController = async (req: Request, res: Response, nex
 // Get all water quality tests
 export const getWaterTestsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tests = await getAllWaterTestsService();
+    const filters = {
+      location: req.query.location as string,
+      status: req.query.status as string,
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string
+    };
+    
+    // Remove undefined values
+    const cleanFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value)
+    );
+    
+    const tests = await getAllWaterTestsService(cleanFilters);
     res.json(tests);
   } catch (error) {
     next(error);
@@ -54,6 +68,37 @@ export const deleteWaterTestController = async (req: Request, res: Response, nex
     await deleteWaterTestService(id);
 
     res.json({ message: 'Water quality test deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get specific water test by ID
+export const getWaterTestByIdController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id as string;
+    const test = await getWaterTestByIdService(id);
+    res.json(test);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get water quality analytics
+export const getWaterTestAnalyticsController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const filters = {
+      location: req.query.location as string,
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string
+    };
+    
+    const cleanFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value)
+    );
+    
+    const analytics = await getWaterTestAnalyticsService(cleanFilters);
+    res.json(analytics);
   } catch (error) {
     next(error);
   }

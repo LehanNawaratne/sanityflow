@@ -45,6 +45,7 @@ export const createWaterTestSchema = z.object({
   location: z.string().min(1, 'Location is required'),
   pH: z.number().min(0).max(14),
   tds: z.number().min(0),
+  turbidity: z.number().min(0),
   contaminants: z.array(z.string()),
   status: z.enum(['Safe', 'Unsafe']),
   notes: z.string().optional()
@@ -54,6 +55,7 @@ export const createWaterTestSchema = z.object({
 export const updateWaterTestSchema = z.object({
   pH: z.number().min(0).max(14).optional(),
   tds: z.number().min(0).optional(),
+  turbidity: z.number().min(0).optional(),
   contaminants: z.array(z.string()).optional(),
   status: z.enum(['Safe', 'Unsafe']).optional(),
   notes: z.string().optional()
