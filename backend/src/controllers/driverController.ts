@@ -49,7 +49,12 @@ export const updateDriverController = async (req: Request, res: Response) => {
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.issues });
     }
-    const driver = await updateDriver(id, parsed.data);
+
+    // updated the parse error
+    const updateData = Object.fromEntries(
+      Object.entries(parsed.data).filter(([_, v]) => v !== undefined)
+    );
+    const driver = await updateDriver(id, updateData);
     res.status(200).json(driver);
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
