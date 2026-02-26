@@ -8,6 +8,7 @@ import beneficiaryRoutes from './routes/beneficiaryRoutes.js';
 import driverRoutes from './routes/driverRoutes.js';
 import resourceRoutes from './routes/resource.routes.js';
 import inventoryTransactionRoutes from './routes/inventoryTransaction.routes.js';
+import supplierRoutes from './routes/supplier.routes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
 //import morganMiddleware from './config/morgan.js';
@@ -30,6 +31,7 @@ app.use('/api/v1/distributions', distributionOrderRoutes);
 app.use('/api/v1/beneficiaries', beneficiaryRoutes);
 app.use('/api/v1/drivers', driverRoutes);
 app.use('/api/v1/resources', resourceRoutes);
+app.use('/api/v1/suppliers', supplierRoutes);
 app.use('/api/v1/inventory-transactions', inventoryTransactionRoutes);
 
 
