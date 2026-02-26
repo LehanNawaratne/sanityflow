@@ -1,5 +1,6 @@
 import DistributionOrder from '../models/DistributionOrder.js';
 import mongoose from 'mongoose';
+import { AppError } from '../utils/errorHandler.js';
 
 export const createDistributionOrder = async (data: {
   resource: string;
@@ -37,7 +38,7 @@ export const getAllDistributionOrders = async (filters?: {
 
 export const getDistributionOrderById = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Invalid order ID');
+    throw new AppError(400, 'Invalid order ID');
   }
   
   const order = await DistributionOrder.findById(id)
@@ -45,7 +46,7 @@ export const getDistributionOrderById = async (id: string) => {
     .populate('createdBy', 'name email');
   
   if (!order) {
-    throw new Error('Distribution order not found');
+    throw new AppError(404, 'Distribution order not found');
   }
   
   return order;
@@ -56,7 +57,7 @@ export const updateDistributionOrder = async (
   data: { driver?: string | undefined; notes?: string | undefined }
 ) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Invalid order ID');
+    throw new AppError(400, 'Invalid order ID');
   }
   
   const updateData: any = {};
@@ -64,7 +65,7 @@ export const updateDistributionOrder = async (
   
   if (data.driver) {
     if (!mongoose.Types.ObjectId.isValid(data.driver)) {
-      throw new Error('Invalid driver ID');
+      throw new AppError(400, 'Invalid driver ID');
     }
     updateData.driver = data.driver;
     updateData.status = 'Assigned';
@@ -78,7 +79,7 @@ export const updateDistributionOrder = async (
   ).populate('driver', 'name email').populate('createdBy', 'name email');
   
   if (!order) {
-    throw new Error('Distribution order not found');
+    throw new AppError(404, 'Distribution order not found');
   }
   
   return order;
@@ -86,7 +87,7 @@ export const updateDistributionOrder = async (
 
 export const updateDeliveryStatus = async (id: string, status: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Invalid order ID');
+    throw new AppError(400, 'Invalid order ID');
   }
   
   const order = await DistributionOrder.findByIdAndUpdate(
@@ -96,7 +97,7 @@ export const updateDeliveryStatus = async (id: string, status: string) => {
   ).populate('driver', 'name email').populate('createdBy', 'name email');
   
   if (!order) {
-    throw new Error('Distribution order not found');
+    throw new AppError(404, 'Distribution order not found');
   }
   
   // TODO: Send SMS/email notification to beneficiary
@@ -106,13 +107,13 @@ export const updateDeliveryStatus = async (id: string, status: string) => {
 
 export const deleteDistributionOrder = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('Invalid order ID');
+    throw new AppError(400, 'Invalid order ID');
   }
   
   const order = await DistributionOrder.findByIdAndDelete(id);
   
   if (!order) {
-    throw new Error('Distribution order not found');
+    throw new AppError(404, 'Distribution order not found');
   }
   
   // TODO: Release reserved inventory (handled by inventory team)

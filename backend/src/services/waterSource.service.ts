@@ -2,6 +2,7 @@ import WaterSource from '../models/WaterSource.js';
 import type { IWaterSource } from '../models/WaterSource.js';
 import { createWaterSourceSchema, updateWaterSourceSchema } from '../types/waterSourceSchemas.js';
 import type { CreateWaterSourceData, UpdateWaterSourceData } from '../types/waterSourceSchemas.js';
+import { AppError } from '../utils/errorHandler.js';
 
 // ──────────────────────────────────────────────
 // Create a new water source
@@ -21,7 +22,7 @@ export const createWaterSourceService = async (
     location: data.location
   });
   if (duplicate) {
-    throw new Error(`A water source named "${data.name}" already exists at "${data.location}"`);
+    throw new AppError(409, `A water source named "${data.name}" already exists at "${data.location}"`);
   }
 
   const source = new WaterSource(data);
@@ -54,7 +55,7 @@ export const getAllWaterSourcesService = async (
 export const getWaterSourceByIdService = async (id: string): Promise<IWaterSource> => {
   const source = await WaterSource.findById(id);
   if (!source) {
-    throw new Error('Water source not found');
+    throw new AppError(404, 'Water source not found');
   }
   return source;
 };
@@ -84,7 +85,7 @@ export const updateWaterSourceService = async (
     { new: true, runValidators: true }
   );
   if (!source) {
-    throw new Error('Water source not found');
+    throw new AppError(404, 'Water source not found');
   }
   return source;
 };
@@ -95,6 +96,6 @@ export const updateWaterSourceService = async (
 export const deleteWaterSourceService = async (id: string): Promise<void> => {
   const source = await WaterSource.findByIdAndDelete(id);
   if (!source) {
-    throw new Error('Water source not found');
+    throw new AppError(404, 'Water source not found');
   }
 };
