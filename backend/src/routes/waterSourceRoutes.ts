@@ -10,19 +10,11 @@ import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-// POST /api/v1/water-sources
-router.post('/', auth, createWaterSourceController);
 
-// GET /api/v1/water-sources
-router.get('/', auth, getAllWaterSourcesController);
-
-// GET /api/v1/water-sources/:id
-router.get('/:id', auth, getWaterSourceByIdController);
-
-// PUT /api/v1/water-sources/:id
-router.put('/:id', auth, updateWaterSourceController);
-
-// DELETE /api/v1/water-sources/:id
-router.delete('/:id', auth, deleteWaterSourceController);
+router.post('/',  createWaterSourceController);
+router.get('/',  getAllWaterSourcesController);
+router.get('/:id',  getWaterSourceByIdController);
+router.put('/:id',  updateWaterSourceController);
+router.delete('/:id',  deleteWaterSourceController);
 
 export default router;
