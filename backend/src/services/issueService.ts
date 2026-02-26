@@ -1,52 +1,52 @@
 import Issue from '../models/Issue.js';
 import type { IIssue } from '../models/Issue.js';
-import type { UpdateIssueStatusData } from '../types/issueSchemas.js';
+import type { CreateIssueData, UpdateIssueData, IssueFilters } from '../types/issueSchemas.js';
 
-// Business logic for issue operations
-export const createNewIssue = async (data: { description: string; location: string }, userId: string): Promise<IIssue> => {
-  // Business rule: Check for duplicate pending issues in same location
-  const existingIssue = await Issue.findOne({
-    location: data.location,
-    status: 'Pending',
-    description: { $regex: data.description, $options: 'i' }
-  });
+const notFound = () => Object.assign(new Error('Issue not found'), { status: 404 });
 
-  if (existingIssue) {
-    throw new Error('A similar issue is already reported and pending in this location');
-  }
-
-  // Create new issue
+export const createNewIssue = async (data: CreateIssueData, userId: string): Promise<IIssue> => {
   const issue = new Issue({
     ...data,
     reporter: userId,
     status: 'Pending'
   });
-
   return await issue.save();
 };
 
-export const getAllIssuesService = async (): Promise<IIssue[]> => {
-  return await Issue.find().populate('reporter', 'name email').sort({ createdAt: -1 });
-};
+export const getAllIssuesService = async (filters: IssueFilters): Promise<IIssue[]> => {
+  const query: Record<string, unknown> = {};
 
-export const updateIssueStatusService = async (id: string, status: 'Pending' | 'In Progress' | 'Resolved'): Promise<IIssue> => {
-  const issue = await Issue.findByIdAndUpdate(
-    id,
-    { status },
-    { new: true, runValidators: true }
-  );
+  if (filters.status)   query.status    = filters.status;
+  if (filters.priority) query.priority  = filters.priority;
+  if (filters.issueType) query.issueType = filters.issueType;
 
-  if (!issue) {
-    throw new Error('Issue not found');
-  }
-
-  return issue;
+  return await Issue.find(query)
+    .populate('reporter', 'name email')
+    .populate('assignedTo', 'name email')
+    .sort({ createdAt: -1 });
 };
 
 export const getIssueByIdService = async (id: string): Promise<IIssue> => {
-  const issue = await Issue.findById(id).populate('reporter', 'name email');
-  if (!issue) {
-    throw new Error('Issue not found');
-  }
+  const issue = await Issue.findById(id)
+    .populate('reporter', 'name email')
+    .populate('assignedTo', 'name email');
+
+  if (!issue) throw notFound();
   return issue;
+};
+
+export const updateIssueService = async (id: string, data: UpdateIssueData): Promise<IIssue> => {
+  const issue = await Issue.findByIdAndUpdate(
+    id,
+    { $set: data },
+    { new: true, runValidators: true }
+  ).populate('reporter', 'name email').populate('assignedTo', 'name email');
+
+  if (!issue) throw notFound();
+  return issue;
+};
+
+export const deleteIssueService = async (id: string): Promise<void> => {
+  const issue = await Issue.findByIdAndDelete(id);
+  if (!issue) throw notFound();
 };

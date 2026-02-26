@@ -1,11 +1,15 @@
 import { z } from 'zod';
-import { updateIssueStatusSchema } from '../validations/issue.validation.js';
+import { createIssueSchema, updateIssueSchema } from '../validations/issue.validation.js';
 
-export type UpdateIssueStatusData = z.infer<typeof updateIssueStatusSchema>;
-
-export type CreateIssueData = {
-  description: string;
-  location: string;
-};
-
+export type IssueType = 'Water Quality' | 'Water Shortage' | 'Infrastructure' | 'Other';
+export type IssuePriority = 'Low' | 'Medium' | 'High';
 export type IssueStatus = 'Pending' | 'In Progress' | 'Resolved';
+
+export type CreateIssueData = z.infer<typeof createIssueSchema>;
+export type UpdateIssueData = z.infer<typeof updateIssueSchema>;
+
+export type IssueFilters = {
+  status?: IssueStatus;
+  priority?: IssuePriority;
+  issueType?: IssueType;
+};

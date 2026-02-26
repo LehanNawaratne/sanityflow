@@ -1,16 +1,28 @@
 import express from 'express';
-import { createIssueController, getIssuesController, updateIssueStatusController } from '../controllers/issueController.js';
+import {
+  createIssueController,
+  getIssuesController,
+  getIssueByIdController,
+  updateIssueController,
+  deleteIssueController
+} from '../controllers/issueController.js';
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-// POST /api/v1/issues - Create a new issue
-router.post('/', auth, createIssueController);
+// POST   /api/issues        — Submit a new issue report
+router.post('/',    auth, createIssueController);
 
-// GET /api/v1/issues - Get all issues
-router.get('/', auth, getIssuesController);
+// GET    /api/issues        — Retrieve all issues (filter: ?status=&priority=&issueType=)
+router.get('/',    auth, getIssuesController);
 
-// PUT /api/v1/issues/:id - Update issue status
-router.put('/:id', auth, updateIssueStatusController);
+// GET    /api/issues/:id    — Retrieve a specific issue
+router.get('/:id', auth, getIssueByIdController);
+
+// PUT    /api/issues/:id    — Update status, assignment, or resolution notes
+router.put('/:id', auth, updateIssueController);
+
+// DELETE /api/issues/:id    — Remove a duplicate or invalid issue report
+router.delete('/:id', auth, deleteIssueController);
 
 export default router;
