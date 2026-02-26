@@ -6,6 +6,7 @@ import waterTestRoutes from './routes/waterTestRoutes.js';
 import waterSourceRoutes from './routes/waterSourceRoutes.js';
 import distributionOrderRoutes from './routes/distributionOrderRoutes.js';
 import beneficiaryRoutes from './routes/beneficiaryRoutes.js';
+import blogRoutes from './routes/blog.routes.js';
 import driverRoutes from './routes/driverRoutes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
@@ -28,7 +29,11 @@ app.use('/api/v1/water-tests', waterTestRoutes);
 app.use('/api/v1/water-sources', waterSourceRoutes);
 app.use('/api/v1/distributions', distributionOrderRoutes);
 app.use('/api/v1/beneficiaries', beneficiaryRoutes);
+
+app.use('/api/v1/blog', blogRoutes);
+
 app.use('/api/v1/drivers', driverRoutes);
+
 
 
 app.use(errorHandler);
