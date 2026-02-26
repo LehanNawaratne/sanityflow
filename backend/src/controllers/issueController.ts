@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { createNewIssue, getAllIssuesService, updateIssueStatusService } from '../services/issueService.js';
-import { createIssueSchema, updateIssueStatusSchema, type UpdateIssueStatusData } from '../types/issueSchemas.js';
+import { createIssueSchema, updateIssueStatusSchema } from '../validations/issue.validation.js';
+import type { UpdateIssueStatusData } from '../types/issueSchemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // Create a new issue

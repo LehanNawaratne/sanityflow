@@ -5,7 +5,7 @@ import {
   updateWaterTestService, 
   deleteWaterTestService 
 } from '../services/waterTestService.js';
-import { createWaterTestSchema, updateWaterTestSchema } from '../types/issueSchemas.js';
+import { createWaterTestSchema, updateWaterTestSchema } from '../validations/waterTest.validation.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // Create a new water quality test
