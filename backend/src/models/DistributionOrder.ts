@@ -23,7 +23,7 @@ const distributionOrderSchema = new mongoose.Schema<IDistributionOrder>({
   },
   driver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   notes: { type: String },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, { timestamps: true });
 
 export default mongoose.model<IDistributionOrder>('DistributionOrder', distributionOrderSchema);
