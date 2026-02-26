@@ -49,7 +49,10 @@ export const updateBeneficiaryController = async (req: Request, res: Response) =
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.issues });
     }
-    const beneficiary = await updateBeneficiary(id, parsed.data);
+    const updateData = Object.fromEntries(
+      Object.entries(parsed.data).filter(([_, v]) => v !== undefined)
+    );
+    const beneficiary = await updateBeneficiary(id, updateData);
     res.status(200).json(beneficiary);
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);

@@ -11,4 +11,4 @@ supplier: z.string().regex(/^[0-9a-fA-F]{24}$/),
 barcode: z.string().optional(),
 isActive: z.boolean().optional() 
 
-})
+});
