@@ -2,10 +2,11 @@ import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 
 export interface IWaterQualityTest extends Document {
-  location: string;
+  waterSource: mongoose.Types.ObjectId; // Reference to WaterSource
   testDate: Date;
   pH: number;
-  tds: number; // Total Dissolved Solids
+  tds: number; // Total Dissolved Solids (ppm)
+  turbidity: number; // Turbidity (NTU)
   contaminants: string[]; // Array of detected contaminants
   status: 'Safe' | 'Unsafe';
   tester: mongoose.Types.ObjectId; // Reference to User
@@ -13,10 +14,11 @@ export interface IWaterQualityTest extends Document {
 }
 
 const waterQualityTestSchema = new mongoose.Schema<IWaterQualityTest>({
-  location: { type: String, required: true },
+  waterSource: { type: mongoose.Schema.Types.ObjectId, ref: 'WaterSource', required: true },
   testDate: { type: Date, required: true, default: Date.now },
   pH: { type: Number, required: true, min: 0, max: 14 },
   tds: { type: Number, required: true, min: 0 },
+  turbidity: { type: Number, required: true, min: 0 },
   contaminants: [{ type: String }],
   status: { type: String, enum: ['Safe', 'Unsafe'], required: true },
   tester: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

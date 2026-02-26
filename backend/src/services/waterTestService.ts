@@ -1,55 +1,80 @@
+import mongoose from 'mongoose';
 import WaterQualityTest from '../models/WaterQualityTest.js';
 import type { IWaterQualityTest } from '../models/WaterQualityTest.js';
+import type { CreateWaterTestData, UpdateWaterTestData, WaterTestFilters } from '../types/waterTestSchemas.js';
+import logger from '../utils/logger.js';
+
+// WHO thresholds: pH 6.5–8.5, TDS < 500 ppm, turbidity < 4 NTU
+const classifyWaterSafety = (pH: number, tds: number, turbidity: number, contaminants: string[]): 'Safe' | 'Unsafe' => {
+  if (pH < 6.5 || pH > 8.5 || tds > 500 || turbidity > 4 || contaminants.length > 0) {
+    return 'Unsafe';
+  }
+  return 'Safe';
+};
 
 // Business logic for water quality test operations
 export const createWaterTestService = async (
-  data: { 
-    location: string; 
-    pH: number; 
-    tds: number; 
-    contaminants: string[]; 
-    status: 'Safe' | 'Unsafe'; 
-    notes?: string | undefined
-  }, 
+  data: CreateWaterTestData,
   userId: string
 ): Promise<IWaterQualityTest> => {
-  // Business rule: Automatically classify based on pH and TDS if status not explicitly unsafe
-  let finalStatus = data.status;
-  
-  // WHO guidelines: pH should be 6.5-8.5, TDS should be < 500 for good quality
-  if (data.pH < 6.5 || data.pH > 8.5 || data.tds > 500 || data.contaminants.length > 0) {
-    finalStatus = 'Unsafe';
-  }
+  const status = classifyWaterSafety(data.pH, data.tds, data.turbidity, data.contaminants);
 
-  // Create new water test
   const test = new WaterQualityTest({
     ...data,
-    status: finalStatus,
+    status,
     tester: userId
   });
 
-  return await test.save();
+  const saved = await test.save();
+
+  // Trigger emergency alert if water classified as unsafe
+  if (status === 'Unsafe') {
+    logger.warn(`UNSAFE water detected — source: ${data.waterSource}, pH: ${data.pH}, TDS: ${data.tds}, turbidity: ${data.turbidity}, contaminants: [${data.contaminants.join(', ')}]`);
+    // TODO: integrate notification/alert service here
+  }
+
+  return saved;
 };
 
-export const getAllWaterTestsService = async (): Promise<IWaterQualityTest[]> => {
-  return await WaterQualityTest.find()
+export const getAllWaterTestsService = async (filters: WaterTestFilters = {}): Promise<IWaterQualityTest[]> => {
+  const query: Record<string, unknown> = {};
+
+  if (filters.source) {
+    query.waterSource = filters.source;
+  }
+
+  if (filters.from || filters.to) {
+    const dateFilter: Record<string, Date> = {};
+    if (filters.from) dateFilter.$gte = new Date(filters.from);
+    if (filters.to) dateFilter.$lte = new Date(filters.to);
+    query.testDate = dateFilter;
+  }
+
+  return await WaterQualityTest.find(query)
     .populate('tester', 'name email')
+    .populate('waterSource', 'name location')
     .sort({ testDate: -1 });
 };
 
-export const updateWaterTestService = async (
-  id: string, 
-  data: { 
-    pH?: number | undefined; 
-    tds?: number | undefined; 
-    contaminants?: string[] | undefined; 
-    status?: 'Safe' | 'Unsafe' | undefined; 
-    notes?: string | undefined
+export const getWaterTestByIdService = async (id: string): Promise<IWaterQualityTest> => {
+  const test = await WaterQualityTest.findById(id)
+    .populate('tester', 'name email')
+    .populate('waterSource', 'name location');
+
+  if (!test) {
+    throw new Error('Water quality test not found');
   }
+
+  return test;
+};
+
+export const updateWaterTestService = async (
+  id: string,
+  data: UpdateWaterTestData
 ): Promise<IWaterQualityTest> => {
   const test = await WaterQualityTest.findByIdAndUpdate(
-    id, 
-    data, 
+    id,
+    data,
     { new: true, runValidators: true }
   );
 
@@ -62,18 +87,42 @@ export const updateWaterTestService = async (
 
 export const deleteWaterTestService = async (id: string): Promise<void> => {
   const test = await WaterQualityTest.findByIdAndDelete(id);
-  
+
   if (!test) {
     throw new Error('Water quality test not found');
   }
 };
 
-export const getWaterTestByIdService = async (id: string): Promise<IWaterQualityTest> => {
-  const test = await WaterQualityTest.findById(id).populate('tester', 'name email');
-  
-  if (!test) {
-    throw new Error('Water quality test not found');
+export const getWaterTestAnalyticsService = async (sourceId?: string) => {
+  const matchStage: Record<string, unknown> = {};
+  if (sourceId) {
+    matchStage.waterSource = new mongoose.Types.ObjectId(sourceId);
   }
-  
-  return test;
+
+  const trends = await WaterQualityTest.aggregate([
+    ...(Object.keys(matchStage).length ? [{ $match: matchStage }] : []),
+    {
+      $group: {
+        _id: {
+          waterSource: '$waterSource',
+          year: { $year: '$testDate' },
+          month: { $month: '$testDate' },
+          day: { $dayOfMonth: '$testDate' }
+        },
+        avgPH: { $avg: '$pH' },
+        avgTDS: { $avg: '$tds' },
+        avgTurbidity: { $avg: '$turbidity' },
+        totalTests: { $sum: 1 },
+        unsafeCount: {
+          $sum: { $cond: [{ $eq: ['$status', 'Unsafe'] }, 1, 0] }
+        },
+        safeCount: {
+          $sum: { $cond: [{ $eq: ['$status', 'Safe'] }, 1, 0] }
+        }
+      }
+    },
+    { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+  ]);
+
+  return trends;
 };

@@ -1,0 +1,8 @@
+import { z } from 'zod';
+import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.validation.js';
+
+export type WaterTestStatus = 'Safe' | 'Unsafe';
+
+export type CreateWaterTestData = z.infer<typeof createWaterTestSchema>;
+export type UpdateWaterTestData = z.infer<typeof updateWaterTestSchema>;
+export type WaterTestFilters = z.infer<typeof waterTestFilterSchema>;
