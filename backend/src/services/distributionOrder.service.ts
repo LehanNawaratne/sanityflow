@@ -123,8 +123,17 @@ export const deleteDistributionOrder = async (id: string) => {
   if (!order) {
     throw new AppError(404, 'Distribution order not found');
   }
-  
-  // TODO: Release reserved inventory (handled by inventory team)
-  
+
+  if (['Pending', 'Assigned'].includes(order.status)) {
+    await Resource.findByIdAndUpdate(order.resource, { $inc: { quantity: order.quantity } });
+    await InventoryTransaction.create({
+      product: order.resource,
+      type: 'ADD',
+      quantity: order.quantity,
+      user: order.createdBy,
+      reason: `Distribution order ${order._id} cancelled`
+    });
+  }
+
   return order;
 };
