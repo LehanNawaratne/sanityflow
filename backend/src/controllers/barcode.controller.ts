@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { HTTP_STATUS } from "../constants/index.js";
-import { barcodeSchema } from "../validations/barcode.validation.js";
+import { barcodeSchema } from "../validations/barcode.schema.js";
 import { lookupBarcodeService } from "../services/barcode.service.js";
 
 export const lookupBarcodeController = async (

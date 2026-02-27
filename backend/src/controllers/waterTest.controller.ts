@@ -7,7 +7,7 @@ import {
   deleteWaterTestService,
   getWaterTestAnalyticsService
 } from '../services/waterTest.service.js';
-import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.validation.js';
+import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.schema.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // POST /api/water-tests — Record a new water quality test

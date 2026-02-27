@@ -6,7 +6,7 @@ import {
   updateIssueService,
   deleteIssueService
 } from '../services/issue.service.js';
-import { createIssueSchema, updateIssueSchema } from '../validations/issue.validation.js';
+import { createIssueSchema, updateIssueSchema } from '../validations/issue.schema.js';
 import type { IssueFilters, IssueStatus, IssuePriority, IssueType } from '../validations/issue.schemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
