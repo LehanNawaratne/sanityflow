@@ -1,20 +1,22 @@
-import express from 'express';
-import { 
-  createDistributionOrder, 
-  getAllDistributionOrders, 
-  getDistributionOrderById, 
-  updateDistributionOrder, 
-  updateDeliveryStatus, 
-  deleteDistributionOrder 
+
+import { Router } from 'express';
+import auth, { requireRole } from '../middleware/auth.js';
+import {
+  createDistributionOrder,
+  getAllDistributionOrders,
+  getDistributionOrderById,
+  updateDistributionOrder,
+  updateDeliveryStatus,
+  deleteDistributionOrder
 } from '../controllers/distributionOrder.controller.js';
 
-const router = express.Router();
+const distributionOrderRouter = Router();
 
-router.post('/', createDistributionOrder);
-router.get('/', getAllDistributionOrders);
-router.get('/:id', getDistributionOrderById);
-router.put('/:id', updateDistributionOrder);
-router.put('/:id/status', updateDeliveryStatus);
-router.delete('/:id', deleteDistributionOrder);
+distributionOrderRouter.get('/', auth, requireRole('admin', 'driver'), getAllDistributionOrders);
+distributionOrderRouter.get('/:id', auth, requireRole('admin', 'driver'), getDistributionOrderById);
+distributionOrderRouter.post('/', auth, requireRole('admin'), createDistributionOrder);
+distributionOrderRouter.put('/:id', auth, requireRole('admin'), updateDistributionOrder);
+distributionOrderRouter.put('/:id/status', auth, requireRole('driver'), updateDeliveryStatus);
+distributionOrderRouter.delete('/:id', auth, requireRole('admin'), deleteDistributionOrder);
 
-export default router;
+export default distributionOrderRouter;

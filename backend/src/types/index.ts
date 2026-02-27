@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'member';
+export type UserRole = 'admin' | 'member' | 'driver';
 
 export interface JWTPayload {
   userId: string;

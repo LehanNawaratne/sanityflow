@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['admin', 'member'] as UserRole[], default: 'member' as UserRole }
+  role: { type: String, enum: ['admin', 'member', 'driver'] as UserRole[], default: 'member' as UserRole }
 }, { timestamps: true });
 
 userSchema.pre('save', async function(this: IUser, next: CallbackWithoutResultAndOptionalError) {

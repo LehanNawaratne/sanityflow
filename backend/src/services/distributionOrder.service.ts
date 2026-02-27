@@ -3,6 +3,7 @@ import { Resource } from '../models/resource.model.js';
 import { InventoryTransaction } from '../models/inventoryTransaction.model.js';
 import mongoose from 'mongoose';
 import { AppError } from '../utils/errorHandler.js';
+import { sendOrderAssignedEmail, sendStatusUpdateEmail } from './email.service.js';
 
 export const createDistributionOrder = async (data: {
   resource: string;
@@ -77,17 +78,28 @@ export const updateDistributionOrder = async (
     }
     updateData.driver = data.driver;
     updateData.status = 'Assigned';
-    // TODO: Send notification to driver
   }
   
   const order = await DistributionOrder.findByIdAndUpdate(
     id,
     updateData,
     { new: true, runValidators: true }
-  ).populate('driver', 'name email').populate('createdBy', 'name email');
+  ).populate<{ driver: { _id: mongoose.Types.ObjectId; name: string; email: string } | null }>('driver', 'name email')
+   .populate('createdBy', 'name email');
   
   if (!order) {
     throw new AppError(404, 'Distribution order not found');
+  }
+
+  // Email driver when assigned
+  if (data.driver && order.driver) {
+    const driver = order.driver as { _id: mongoose.Types.ObjectId; name: string; email: string };
+    void sendOrderAssignedEmail({
+      driverEmail: driver.email,
+      driverName: driver.name,
+      orderId: order._id.toString(),
+      targetLocation: order.targetLocation,
+    });
   }
   
   return order;
@@ -102,13 +114,24 @@ export const updateDeliveryStatus = async (id: string, status: string) => {
     id,
     { status },
     { new: true, runValidators: true }
-  ).populate('driver', 'name email').populate('createdBy', 'name email');
+  ).populate('driver', 'name email')
+   .populate<{ createdBy: { _id: mongoose.Types.ObjectId; name: string; email: string } }>('createdBy', 'name email');
   
   if (!order) {
     throw new AppError(404, 'Distribution order not found');
   }
-  
-  // TODO: Send SMS/email notification to beneficiary
+
+  // Email the admin (order creator) on every status change
+  const creator = order.createdBy as unknown as { email: string };
+  if (creator?.email) {
+    void sendStatusUpdateEmail({
+      recipientEmail: creator.email,
+      orderId: order._id.toString(),
+      targetLocation: order.targetLocation,
+      status,
+      ...(order.notes !== undefined && { notes: order.notes }),
+    });
+  }
   
   return order;
 };
