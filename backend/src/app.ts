@@ -7,6 +7,7 @@ import waterSourceRoutes from './routes/waterSourceRoutes.js';
 import distributionOrderRoutes from './routes/distributionOrderRoutes.js';
 import beneficiaryRoutes from './routes/beneficiaryRoutes.js';
 import blogRoutes from './routes/blog.routes.js';
+import forumRoutes from './routes/forum.routes.js';
 import driverRoutes from './routes/driverRoutes.js';
 import resourceRoutes from './routes/resource.routes.js';
 import inventoryTransactionRoutes from './routes/inventoryTransaction.routes.js';
@@ -32,8 +33,8 @@ app.use('/api/v1/water-tests', waterTestRoutes);
 app.use('/api/v1/water-sources', waterSourceRoutes);
 app.use('/api/v1/distributions', distributionOrderRoutes);
 app.use('/api/v1/beneficiaries', beneficiaryRoutes);
-
 app.use('/api/v1/blog', blogRoutes);
+app.use('/api/v1/community/forum', forumRoutes);
 
 app.use('/api/v1/drivers', driverRoutes);
 app.use('/api/v1/resources', resourceRoutes);
