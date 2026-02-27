@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { HTTP_STATUS } from '../constants/index.js';
+import { HTTP_STATUS } from '../constants/HTTP_STATUS.js';
 import env from '../config/env.js';
-import Logger from './logger.js';
+import Logger from '../utils/logger.js';
 
 export class AppError extends Error {
   readonly status: number;

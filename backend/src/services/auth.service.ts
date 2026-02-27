@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { AppError } from '../utils/errorHandler.js';
-import { JWT_EXPIRES_IN } from '../constants/index.js';
+import { AppError } from '../middleware/errorHandler.js';
+import { JWT_EXPIRES_IN } from '../constants/HTTP_STATUS.js';
 import env from '../config/env.js';
 import type { UserRole } from '../types/index.js';
 

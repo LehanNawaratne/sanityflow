@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { HTTP_STATUS } from "../constants/index.js";
+import { HTTP_STATUS } from "../constants/HTTP_STATUS.js";
 import { barcodeSchema } from "../validations/barcode.schema.js";
 import { lookupBarcodeService } from "../services/barcode.service.js";
 

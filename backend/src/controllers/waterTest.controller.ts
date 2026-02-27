@@ -8,7 +8,7 @@ import {
   getWaterTestAnalyticsService
 } from '../services/waterTest.service.js';
 import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.schema.js';
-import { HTTP_STATUS } from '../constants/index.js';
+import { HTTP_STATUS } from '../constants/HTTP_STATUS.js';
 
 // POST /api/water-tests — Record a new water quality test
 export const createWaterTestController = async (req: Request, res: Response, next: NextFunction) => {

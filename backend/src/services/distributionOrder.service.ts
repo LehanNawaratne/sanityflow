@@ -2,7 +2,7 @@ import DistributionOrder from '../models/DistributionOrder.js';
 import { Resource } from '../models/resource.model.js';
 import { InventoryTransaction } from '../models/inventoryTransaction.model.js';
 import mongoose from 'mongoose';
-import { AppError } from '../utils/errorHandler.js';
+import { AppError } from '../middleware/errorHandler.js';
 
 export const createDistributionOrder = async (data: {
   resource: string;

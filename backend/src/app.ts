@@ -13,7 +13,7 @@ import resourceRoutes from './routes/resource.routes.js';
 import inventoryTransactionRoutes from './routes/inventoryTransaction.routes.js';
 import supplierRoutes from './routes/supplier.routes.js';
 import barcodeRoutes from "./routes/barcode.routes.js";
-import errorHandler from './utils/errorHandler.js';
+import errorHandler from './middleware/errorHandler.js';
 import helmet from 'helmet';
 //import morganMiddleware from './config/morgan.js';
 import Logger from './utils/logger.js';

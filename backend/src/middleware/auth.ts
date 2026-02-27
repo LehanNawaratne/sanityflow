@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AppError } from '../utils/errorHandler.js';
+import { AppError } from './errorHandler.js';
 import env from '../config/env.js';
 import type { JWTPayload, UserRole } from '../types/index.js';
 

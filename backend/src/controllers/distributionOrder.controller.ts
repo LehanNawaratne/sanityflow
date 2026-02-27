@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import * as distributionOrderService from '../services/distributionOrder.service.js';
 import { createDistributionOrderSchema, updateDistributionOrderSchema, updateDeliveryStatusSchema } from '../validations/distributionOrder.schemas.js';
-import { HTTP_STATUS } from '../constants/index.js';
+import { HTTP_STATUS } from '../constants/HTTP_STATUS.js';
 
 export const createDistributionOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {

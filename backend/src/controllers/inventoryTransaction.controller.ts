@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as service from "../services/inventoryTransaction.service.js";
-import { HTTP_STATUS } from "../constants/index.js";
+import { HTTP_STATUS } from "../constants/HTTP_STATUS.js";
 
 export const createTransaction = async (req: Request, res: Response) => {
   const transaction = await service.createTransaction({

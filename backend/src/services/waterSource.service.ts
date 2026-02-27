@@ -2,7 +2,7 @@ import WaterSource from '../models/WaterSource.js';
 import type { IWaterSource } from '../models/WaterSource.js';
 import { createWaterSourceSchema, updateWaterSourceSchema } from '../validations/waterSource.schemas.js';
 import type { CreateWaterSourceData, UpdateWaterSourceData } from '../validations/waterSource.schemas.js';
-import { AppError } from '../utils/errorHandler.js';
+import { AppError } from '../middleware/errorHandler.js';
 
 // ──────────────────────────────────────────────
 // Create a new water source

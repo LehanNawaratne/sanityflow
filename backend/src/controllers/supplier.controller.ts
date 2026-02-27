@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as supplierService from "../services/supplier.service.js";
-import { HTTP_STATUS } from "../constants/index.js";
+import { HTTP_STATUS } from "../constants/HTTP_STATUS.js";
 
 export const createSupplier = async (req: Request, res: Response) => {
   const supplier = await supplierService.createSupplier(req.body);

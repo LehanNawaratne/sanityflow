@@ -6,7 +6,7 @@ import {
   updateWaterSourceService,
   deleteWaterSourceService
 } from '../services/waterSource.service.js';
-import { HTTP_STATUS } from '../constants/index.js';
+import { HTTP_STATUS } from '../constants/HTTP_STATUS.js';
 
 // POST /api/v1/water-sources
 export const createWaterSourceController = async (req: Request, res: Response, next: NextFunction) => {

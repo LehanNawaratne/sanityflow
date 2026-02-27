@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as resourceService from "../services/resource.service.js";
-import { HTTP_STATUS } from "../constants/index.js";
+import { HTTP_STATUS } from "../constants/HTTP_STATUS.js";
 
 export const createResource = async (req: Request, res: Response) => {
   try {

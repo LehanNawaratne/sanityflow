@@ -2,8 +2,8 @@ import ForumThread from '../models/ForumThread.js';
 import ForumReply from '../models/ForumReply.js';
 import type { IForumThread } from '../models/ForumThread.js';
 import type { IForumReply } from '../models/ForumReply.js';
-import { AppError } from '../utils/errorHandler.js';
-import { HTTP_STATUS } from '../constants/index.js';
+import { AppError } from '../middleware/errorHandler.js';
+import { HTTP_STATUS } from '../constants/HTTP_STATUS.js';
 import type { CreateThreadData, UpdateThreadData, CreateReplyData, GetThreadsQuery } from '../validations/forum.schemas.js';
 
 export interface PaginatedThreads {
