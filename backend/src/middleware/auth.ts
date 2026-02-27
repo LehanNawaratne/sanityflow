@@ -1,18 +1,29 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { HTTP_STATUS } from '../constants/index.js';
-import type { JWTPayload } from '../types/index.js';
+import { AppError } from '../utils/errorHandler.js';
+import env from '../config/env.js';
+import type { JWTPayload, UserRole } from '../types/index.js';
 
-const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) throw new Error();
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-    (req as any).userId = decoded.userId;
+    if (!token) throw new AppError(401, 'Please authenticate');
+
+    const decoded = jwt.verify(token, env.JWT_SECRET) as JWTPayload;
+    req.user = { userId: decoded.userId, role: decoded.role };
     next();
   } catch (error) {
-    res.status(HTTP_STATUS.UNAUTHORIZED).json({ error: 'Please authenticate' });
+    next(error instanceof AppError ? error : new AppError(401, 'Please authenticate'));
   }
+};
+
+export const requireRole = (...roles: UserRole[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError(403, 'Forbidden'));
+    }
+    next();
+  };
 };
 
 export default auth;

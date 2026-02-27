@@ -14,7 +14,7 @@ import { HTTP_STATUS } from '../constants/index.js';
 export const createIssueController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validatedData = createIssueSchema.parse(req.body);
-    const issue = await createNewIssue(validatedData, (req as any).userId);
+    const issue = await createNewIssue(validatedData, req.user.userId);
     res.status(HTTP_STATUS.CREATED).json(issue);
   } catch (error) {
     next(error);

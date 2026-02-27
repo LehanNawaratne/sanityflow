@@ -5,7 +5,7 @@ import { HTTP_STATUS } from "../constants/index.js";
 export const createTransaction = async (req: Request, res: Response) => {
   const transaction = await service.createTransaction({
     ...req.body,
-    user: (req as any).userId,
+    user: req.user.userId,
   });
 
   res.status(HTTP_STATUS.CREATED).json(transaction);
