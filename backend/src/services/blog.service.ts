@@ -1,6 +1,8 @@
 import BlogPost from '../models/BlogPost.js';
 import type { IBlogPost } from '../models/BlogPost.js';
 import type { CreateBlogPostData, UpdateBlogPostData, GetBlogPostsQuery } from '../validations/blog.schemas.js';
+import { AppError } from '../utils/errorHandler.js';
+import { HTTP_STATUS } from '../constants/index.js';
 
 export interface PaginatedBlogPosts {
   posts: IBlogPost[];
@@ -53,7 +55,7 @@ export const getAllBlogPostsService = async (query: GetBlogPostsQuery): Promise<
 export const getBlogPostByIdService = async (id: string): Promise<IBlogPost> => {
   const post = await BlogPost.findById(id);
   if (!post) {
-    throw new Error('Blog post not found');
+    throw new AppError(HTTP_STATUS.NOT_FOUND, 'Blog post not found');
   }
   return post;
 };
@@ -80,7 +82,7 @@ export const updateBlogPostService = async (id: string, data: UpdateBlogPostData
   );
 
   if (!post) {
-    throw new Error('Blog post not found');
+    throw new AppError(HTTP_STATUS.NOT_FOUND, 'Blog post not found');
   }
 
   return post;
@@ -89,6 +91,6 @@ export const updateBlogPostService = async (id: string, data: UpdateBlogPostData
 export const deleteBlogPostService = async (id: string): Promise<void> => {
   const post = await BlogPost.findByIdAndDelete(id);
   if (!post) {
-    throw new Error('Blog post not found');
+    throw new AppError(HTTP_STATUS.NOT_FOUND, 'Blog post not found');
   }
 };

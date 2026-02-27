@@ -20,8 +20,6 @@ export interface ThreadWithReplies {
   totalReplies: number;
 }
 
-// ─── Threads ──────────────────────────────────────────────────────────────────
-
 export const getAllThreadsService = async (query: GetThreadsQuery): Promise<PaginatedThreads> => {
   const { page, limit, status, tag, search } = query;
 

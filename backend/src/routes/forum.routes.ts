@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import auth from '../middleware/auth.js';
+import auth, { requireRole } from '../middleware/auth.js';
 
 import {
   getAllThreadsHandler,
@@ -15,13 +15,13 @@ import {
 const forumRouter = Router();
 
 forumRouter.get('/', getAllThreadsHandler);
-forumRouter.post('/', auth, createThreadHandler);
 forumRouter.get('/:id', getThreadByIdHandler);
+forumRouter.post('/', auth, createThreadHandler);
 forumRouter.patch('/:id', auth, updateThreadHandler);
-forumRouter.delete('/:id', auth, deleteThreadHandler);
+forumRouter.delete('/:id', auth, requireRole('admin'), deleteThreadHandler);
 
 forumRouter.get('/:id/replies', getRepliesHandler);
 forumRouter.post('/:id/replies', auth, createReplyHandler);
-forumRouter.delete('/:id/replies/:replyId', auth, deleteReplyHandler);
+forumRouter.delete('/:id/replies/:replyId', auth, requireRole('admin'), deleteReplyHandler);
 
 export default forumRouter;

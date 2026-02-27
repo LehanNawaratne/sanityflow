@@ -15,8 +15,7 @@ import supplierRoutes from './routes/supplier.routes.js';
 import barcodeRoutes from "./routes/barcode.routes.js";
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
-//import morganMiddleware from './config/morgan.js';
-import Logger from './utils/logger.js';
+import morganMiddleware from './config/morgan.js';
 
 const app = express();
 
@@ -24,7 +23,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
-//app.use(morganMiddleware);
+app.use(morganMiddleware);
 
 
 //routes

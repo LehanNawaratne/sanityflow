@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { AppError } from '../utils/errorHandler.js';
-import { JWT_EXPIRES_IN } from '../constants/index.js';
+import { JWT_EXPIRES_IN, HTTP_STATUS } from '../constants/index.js';
 import env from '../config/env.js';
 import type { UserRole } from '../types/index.js';
 
@@ -33,7 +33,7 @@ const signToken = (userId: string, role: UserRole): string => {
 export const registerUser = async ({ name, email, password }: RegisterInput): Promise<AuthResult> => {
   const existing = await User.findOne({ email });
   if (existing) {
-    throw new AppError(409, 'Email already in use');
+    throw new AppError(HTTP_STATUS.CONFLICT, 'Email already in use');
   }
 
   const user = await User.create({ name, email, password });
@@ -48,7 +48,7 @@ export const registerUser = async ({ name, email, password }: RegisterInput): Pr
 export const loginUser = async ({ email, password }: LoginInput): Promise<AuthResult> => {
   const user = await User.findOne({ email });
   if (!user || !(await user.comparePassword(password))) {
-    throw new AppError(401, 'Invalid credentials');
+    throw new AppError(HTTP_STATUS.UNAUTHORIZED, 'Invalid credentials');
   }
 
   const token = signToken(String(user._id), user.role);

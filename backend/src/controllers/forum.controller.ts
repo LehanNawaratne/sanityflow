@@ -17,6 +17,7 @@ import {
   updateThreadSchema,
   createReplySchema,
 } from '../validations/forum.schemas.js';
+import Logger from '../utils/logger.js';
 
 export const getAllThreadsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -39,6 +40,7 @@ export const createThreadHandler = async (req: Request, res: Response, next: Nex
     const data = createThreadSchema.parse(req.body);
     const userId = req.user.userId;
     const thread = await createThreadService(data, userId);
+    Logger.info(`Thread created: ${thread._id} by user: ${userId}`);
     res.status(201).json(thread);
   } catch (error) { next(error); }
 };
@@ -49,6 +51,7 @@ export const updateThreadHandler = async (req: Request, res: Response, next: Nex
     const data = updateThreadSchema.parse(req.body);
     const userId = req.user.userId;
     const thread = await updateThreadService(id, data, userId);
+    Logger.info(`Thread updated: ${id} by user: ${userId}`);
     res.status(200).json(thread);
   } catch (error) { next(error); }
 };
@@ -58,6 +61,7 @@ export const deleteThreadHandler = async (req: Request, res: Response, next: Nex
     const { id } = threadIdParamSchema.parse(req.params);
     const userId = req.user.userId;
     await deleteThreadService(id, userId);
+    Logger.info(`Thread deleted: ${id} by user: ${userId}`);
     res.status(204).send();
   } catch (error) { next(error); }
 };
@@ -78,6 +82,7 @@ export const createReplyHandler = async (req: Request, res: Response, next: Next
     const data = createReplySchema.parse(req.body);
     const userId = req.user.userId;
     const reply = await createReplyService(id, data, userId);
+    Logger.info(`Reply created: ${reply._id} on thread: ${id} by user: ${userId}`);
     res.status(201).json(reply);
   } catch (error) { next(error); }
 };
@@ -87,6 +92,7 @@ export const deleteReplyHandler = async (req: Request, res: Response, next: Next
     const { id, replyId } = replyParamSchema.parse(req.params);
     const userId = req.user.userId;
     await deleteReplyService(id, replyId, userId);
+    Logger.info(`Reply deleted: ${replyId} on thread: ${id} by user: ${userId}`);
     res.status(204).send();
   } catch (error) { next(error); }
 };
