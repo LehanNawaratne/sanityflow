@@ -24,14 +24,6 @@ const blogPostSchema = new mongoose.Schema<IBlogPost>(
   { timestamps: true }
 );
 
-// Automatically set publishedAt when status changes to Published
-blogPostSchema.pre('save', function (next) {
-  if (this.isModified('status') && this.status === 'Published' && !this.publishedAt) {
-    this.publishedAt = new Date();
-  }
-  next();
-});
-
 blogPostSchema.index({ status: 1, publishedAt: -1 });
 blogPostSchema.index({ tags: 1 });
 

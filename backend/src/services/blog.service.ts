@@ -60,23 +60,24 @@ export const getBlogPostByIdService = async (id: string): Promise<IBlogPost> => 
 
 export const createBlogPostService = async (data: CreateBlogPostData): Promise<IBlogPost> => {
   const post = new BlogPost(data);
+  if (data.status === 'Published' && !post.publishedAt) {
+    post.publishedAt = new Date();
+  }
   return await post.save();
 };
 
 export const updateBlogPostService = async (id: string, data: UpdateBlogPostData): Promise<IBlogPost> => {
-  // If status is being set to Published, set publishedAt if not already set
   const updatePayload: Record<string, unknown> = { ...data };
+
   if (data.status === 'Published') {
-    const existing = await BlogPost.findById(id).select('publishedAt');
-    if (existing && !existing.publishedAt) {
-      updatePayload.publishedAt = new Date();
-    }
+    updatePayload.publishedAt = new Date();
   }
 
-  const post = await BlogPost.findByIdAndUpdate(id, updatePayload, {
-    new: true,
-    runValidators: true,
-  });
+  const post = await BlogPost.findByIdAndUpdate(
+    id,
+    { $set: updatePayload },
+    { new: true, runValidators: true },
+  );
 
   if (!post) {
     throw new Error('Blog post not found');
