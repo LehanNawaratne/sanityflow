@@ -10,7 +10,6 @@ import { createIssueSchema, updateIssueSchema } from '../validations/issue.schem
 import type { IssueFilters, IssueStatus, IssuePriority, IssueType } from '../validations/issue.schemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
-// POST /api/issues — Submit a new issue report
 export const createIssueController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validatedData = createIssueSchema.parse(req.body);
@@ -21,7 +20,6 @@ export const createIssueController = async (req: Request, res: Response, next: N
   }
 };
 
-// GET /api/issues — Retrieve all issues (with optional filters)
 export const getIssuesController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const filters: IssueFilters = {};
@@ -36,7 +34,6 @@ export const getIssuesController = async (req: Request, res: Response, next: Nex
   }
 };
 
-// GET /api/issues/:id — Retrieve a specific issue
 export const getIssueByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const issue = await getIssueByIdService(req.params.id as string);
@@ -46,7 +43,6 @@ export const getIssueByIdController = async (req: Request, res: Response, next: 
   }
 };
 
-// PUT /api/issues/:id — Update status, assignment, or resolution notes
 export const updateIssueController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validatedData = updateIssueSchema.parse(req.body);
@@ -57,7 +53,6 @@ export const updateIssueController = async (req: Request, res: Response, next: N
   }
 };
 
-// DELETE /api/issues/:id — Remove a duplicate or invalid issue report
 export const deleteIssueController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await deleteIssueService(req.params.id as string);

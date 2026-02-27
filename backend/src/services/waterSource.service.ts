@@ -3,20 +3,18 @@ import type { IWaterSource } from '../models/WaterSource.js';
 import { createWaterSourceSchema, updateWaterSourceSchema } from '../validations/waterSource.schemas.js';
 import type { CreateWaterSourceData, UpdateWaterSourceData } from '../validations/waterSource.schemas.js';
 import { AppError } from '../utils/errorHandler.js';
+import { fetchWeatherForLocation, type WeatherData } from './weather.service.js';
 
-// ──────────────────────────────────────────────
-// Create a new water source
-// Business rules:
-//   1. Validate input with Zod schema
-//   2. Reject duplicate source (same name + location)
-// ──────────────────────────────────────────────
+export interface WaterSourceWithWeather {
+  source: IWaterSource;
+  weather: WeatherData | null;
+}
+
 export const createWaterSourceService = async (
   rawData: unknown
 ): Promise<IWaterSource> => {
-  // 1. Validate & sanitise input
   const data: CreateWaterSourceData = createWaterSourceSchema.parse(rawData);
 
-  // 2. Business rule: prevent duplicate water sources
   const duplicate = await WaterSource.findOne({
     name: data.name,
     location: data.location
@@ -29,12 +27,6 @@ export const createWaterSourceService = async (
   return await source.save();
 };
 
-// ──────────────────────────────────────────────
-// Retrieve all water sources
-// Business rules:
-//   1. Support optional filters: condition, type, isActive
-//   2. Default: return all sources sorted by newest first
-// ──────────────────────────────────────────────
 export const getAllWaterSourcesService = async (
   filters: { condition?: string; type?: string; isActive?: string } = {}
 ): Promise<IWaterSource[]> => {
@@ -49,32 +41,21 @@ export const getAllWaterSourcesService = async (
   return await WaterSource.find(query).sort({ createdAt: -1 });
 };
 
-// ──────────────────────────────────────────────
-// Retrieve a single water source by ID
-// ──────────────────────────────────────────────
-export const getWaterSourceByIdService = async (id: string): Promise<IWaterSource> => {
+export const getWaterSourceByIdService = async (id: string): Promise<WaterSourceWithWeather> => {
   const source = await WaterSource.findById(id);
   if (!source) {
     throw new AppError(404, 'Water source not found');
   }
-  return source;
+  const weather = await fetchWeatherForLocation(source.location);
+  return { source, weather };
 };
 
-// ──────────────────────────────────────────────
-// Update a water source
-// Business rules:
-//   1. Validate input with Zod schema
-//   2. If condition is set to 'Poor' and no note is provided,
-//      auto-append an inspection warning note
-// ──────────────────────────────────────────────
 export const updateWaterSourceService = async (
   id: string,
   rawData: unknown
 ): Promise<IWaterSource> => {
-  // 1. Validate & sanitise input
   const data: UpdateWaterSourceData = updateWaterSourceSchema.parse(rawData);
 
-  // 2. Business rule: auto-note on 'Poor' condition if none supplied
   if (data.condition === 'Poor' && !data.notes) {
     data.notes = 'Condition flagged as Poor — inspection and maintenance required.';
   }
@@ -90,9 +71,6 @@ export const updateWaterSourceService = async (
   return source;
 };
 
-// ──────────────────────────────────────────────
-// Delete a water source
-// ──────────────────────────────────────────────
 export const deleteWaterSourceService = async (id: string): Promise<void> => {
   const source = await WaterSource.findByIdAndDelete(id);
   if (!source) {

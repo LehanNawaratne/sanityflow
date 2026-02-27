@@ -1,0 +1,40 @@
+import axios from 'axios';
+import env from '../config/env.js';
+import logger from '../utils/logger.js';
+
+export interface WeatherData {
+  condition: string;
+  temp_c: number;
+  humidity: number;
+  rainfall_last_1h_mm: number;
+  isHighRisk: boolean;
+  riskReason?: string;
+}
+
+const HIGH_RISK_CONDITIONS = ['Thunderstorm', 'Drizzle', 'Rain', 'Snow', 'Squall', 'Tornado'];
+
+export const fetchWeatherForLocation = async (location: string): Promise<WeatherData | null> => {
+  try {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${env.OPENWEATHER_API_KEY}&units=metric`;
+    const { data } = await axios.get(url, { timeout: 10000 });
+
+    const condition: string = data.weather?.[0]?.main ?? 'Unknown';
+    const temp_c: number = data.main?.temp ?? 0;
+    const humidity: number = data.main?.humidity ?? 0;
+    const rainfall_last_1h_mm: number = data.rain?.['1h'] ?? 0;
+
+    const isHighRisk = HIGH_RISK_CONDITIONS.includes(condition) || rainfall_last_1h_mm > 10;
+    const riskReason = isHighRisk
+      ? `${condition} detected${rainfall_last_1h_mm > 10 ? ` with ${rainfall_last_1h_mm}mm rainfall in last hour` : ''}`
+      : undefined;
+
+    if (isHighRisk) {
+      logger.warn(`Weather risk at "${location}": ${riskReason}`);
+    }
+
+    return { condition, temp_c, humidity, rainfall_last_1h_mm, isHighRisk, riskReason };
+  } catch (error) {
+    logger.warn(`Weather fetch failed for location "${location}": ${(error as Error).message}`);
+    return null;
+  }
+};

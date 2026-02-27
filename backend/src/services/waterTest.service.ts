@@ -3,8 +3,8 @@ import WaterQualityTest from '../models/WaterQualityTest.js';
 import type { IWaterQualityTest } from '../models/WaterQualityTest.js';
 import type { CreateWaterTestData, UpdateWaterTestData, WaterTestFilters } from '../validations/waterTest.schemas.js';
 import logger from '../utils/logger.js';
+import { AppError } from '../utils/errorHandler.js';
 
-// WHO thresholds: pH 6.5–8.5, TDS < 500 ppm, turbidity < 4 NTU
 const classifyWaterSafety = (pH: number, tds: number, turbidity: number, contaminants: string[]): 'Safe' | 'Unsafe' => {
   if (pH < 6.5 || pH > 8.5 || tds > 500 || turbidity > 4 || contaminants.length > 0) {
     return 'Unsafe';
@@ -12,7 +12,6 @@ const classifyWaterSafety = (pH: number, tds: number, turbidity: number, contami
   return 'Safe';
 };
 
-// Business logic for water quality test operations
 export const createWaterTestService = async (
   data: CreateWaterTestData,
   userId: string
@@ -27,10 +26,8 @@ export const createWaterTestService = async (
 
   const saved = await test.save();
 
-  // Trigger emergency alert if water classified as unsafe
   if (status === 'Unsafe') {
     logger.warn(`UNSAFE water detected — source: ${data.waterSource}, pH: ${data.pH}, TDS: ${data.tds}, turbidity: ${data.turbidity}, contaminants: [${data.contaminants.join(', ')}]`);
-    // TODO: integrate notification/alert service here
   }
 
   return saved;
@@ -62,7 +59,7 @@ export const getWaterTestByIdService = async (id: string): Promise<IWaterQuality
     .populate('waterSource', 'name location');
 
   if (!test) {
-    throw new Error('Water quality test not found');
+    throw new AppError(404, 'Water quality test not found');
   }
 
   return test;
@@ -79,7 +76,7 @@ export const updateWaterTestService = async (
   );
 
   if (!test) {
-    throw new Error('Water quality test not found');
+    throw new AppError(404, 'Water quality test not found');
   }
 
   return test;
@@ -89,7 +86,7 @@ export const deleteWaterTestService = async (id: string): Promise<void> => {
   const test = await WaterQualityTest.findByIdAndDelete(id);
 
   if (!test) {
-    throw new Error('Water quality test not found');
+    throw new AppError(404, 'Water quality test not found');
   }
 };
 

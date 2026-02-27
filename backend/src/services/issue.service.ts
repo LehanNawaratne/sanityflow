@@ -1,8 +1,9 @@
 import Issue from '../models/Issue.js';
 import type { IIssue } from '../models/Issue.js';
 import type { CreateIssueData, UpdateIssueData, IssueFilters } from '../validations/issue.schemas.js';
+import { AppError } from '../utils/errorHandler.js';
 
-const notFound = () => Object.assign(new Error('Issue not found'), { status: 404 });
+const notFound = () => new AppError(404, 'Issue not found');
 
 export const createNewIssue = async (data: CreateIssueData, userId: string): Promise<IIssue> => {
   const issue = new Issue({

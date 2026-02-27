@@ -8,7 +8,6 @@ import {
 } from '../services/waterSource.service.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
-// POST /api/v1/water-sources
 export const createWaterSourceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const source = await createWaterSourceService(req.body);
@@ -18,7 +17,6 @@ export const createWaterSourceController = async (req: Request, res: Response, n
   }
 };
 
-// GET /api/v1/water-sources
 export const getAllWaterSourcesController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { condition, type, isActive } = req.query as {
@@ -37,17 +35,15 @@ export const getAllWaterSourcesController = async (req: Request, res: Response, 
   }
 };
 
-// GET /api/v1/water-sources/:id
 export const getWaterSourceByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const source = await getWaterSourceByIdService(req.params.id as string);
-    res.json(source);
+    const { source, weather } = await getWaterSourceByIdService(req.params.id as string);
+    res.json({ ...source.toObject(), weather });
   } catch (error) {
     next(error);
   }
 };
 
-// PUT /api/v1/water-sources/:id
 export const updateWaterSourceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const source = await updateWaterSourceService(req.params.id as string, req.body);
@@ -57,7 +53,6 @@ export const updateWaterSourceController = async (req: Request, res: Response, n
   }
 };
 
-// DELETE /api/v1/water-sources/:id
 export const deleteWaterSourceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await deleteWaterSourceService(req.params.id as string);

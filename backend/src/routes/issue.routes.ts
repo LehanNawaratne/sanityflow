@@ -6,14 +6,14 @@ import {
   updateIssueController,
   deleteIssueController
 } from '../controllers/issue.controller.js';
-import auth from '../middleware/auth.js';
+import auth, { requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/',  createIssueController);
-router.get('/',  getIssuesController);
-router.get('/:id', getIssueByIdController);
-router.put('/:id', updateIssueController);
-router.delete('/:id',  deleteIssueController);
+router.get('/', auth, getIssuesController);
+router.get('/:id', auth, getIssueByIdController);
+router.post('/', auth, createIssueController);
+router.put('/:id', auth, requireRole('admin'), updateIssueController);
+router.delete('/:id', auth, requireRole('admin'), deleteIssueController);
 
 export default router;

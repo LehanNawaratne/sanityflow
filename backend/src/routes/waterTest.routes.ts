@@ -7,15 +7,15 @@ import {
   updateWaterTestController, 
   deleteWaterTestController 
 } from '../controllers/waterTest.controller.js';
-import auth from '../middleware/auth.js';
+import auth, { requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/',  createWaterTestController);
-router.get('/', getWaterTestsController);
-router.get('/analytics',  getWaterTestAnalyticsController);
-router.get('/:id',  getWaterTestByIdController);
-router.put('/:id',  updateWaterTestController);
-router.delete('/:id',  deleteWaterTestController);
+router.get('/', auth, getWaterTestsController);
+router.get('/analytics', auth, getWaterTestAnalyticsController);
+router.get('/:id', auth, getWaterTestByIdController);
+router.post('/', auth, requireRole('admin'), createWaterTestController);
+router.put('/:id', auth, requireRole('admin'), updateWaterTestController);
+router.delete('/:id', auth, requireRole('admin'), deleteWaterTestController);
 
 export default router;
