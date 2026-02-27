@@ -8,7 +8,11 @@ export const createDistributionOrder = async (req: Request, res: Response, next:
     const validatedData = createDistributionOrderSchema.parse(req.body);
     const order = await distributionOrderService.createDistributionOrder({
       ...validatedData,
-      createdBy: (req as any).userId ?? '69a1aede35e6de7168b71353' // fallback for testing
+
+      createdBy: (req as any).userId
+
+      createdBy: req.user.userId
+
     });
     res.status(HTTP_STATUS.CREATED).json(order);
   } catch (error) {

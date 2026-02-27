@@ -14,7 +14,7 @@ import { HTTP_STATUS } from '../constants/index.js';
 export const createWaterTestController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validatedData = createWaterTestSchema.parse(req.body);
-    const test = await createWaterTestService(validatedData, (req as any).userId);
+    const test = await createWaterTestService(validatedData, req.user.userId);
     res.status(HTTP_STATUS.CREATED).json(test);
   } catch (error) {
     next(error);

@@ -9,4 +9,4 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
-export const JWT_EXPIRES_IN = '7d';
+export const JWT_EXPIRES_IN = '1d';
