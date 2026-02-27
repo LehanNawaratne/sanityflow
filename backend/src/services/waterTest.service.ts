@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import WaterQualityTest from '../models/WaterQualityTest.js';
 import type { IWaterQualityTest } from '../models/WaterQualityTest.js';
-import type { CreateWaterTestData, UpdateWaterTestData, WaterTestFilters } from '../types/waterTestSchemas.js';
+import type { CreateWaterTestData, UpdateWaterTestData, WaterTestFilters } from '../validations/waterTest.schemas.js';
 import logger from '../utils/logger.js';
 
 // WHO thresholds: pH 6.5–8.5, TDS < 500 ppm, turbidity < 4 NTU

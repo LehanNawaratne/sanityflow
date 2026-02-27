@@ -5,7 +5,7 @@ import {
   getDriverByIdController,
   updateDriverController,
   deleteDriverController
-} from '../controllers/driverController.js';
+} from '../controllers/driver.controller.js';
 
 const router = express.Router();
 

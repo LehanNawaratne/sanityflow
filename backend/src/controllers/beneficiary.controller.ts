@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createBeneficiarySchema, updateBeneficiarySchema } from '../types/beneficiarySchemas.js';
+import { createBeneficiarySchema, updateBeneficiarySchema } from '../validations/beneficiary.schemas.js';
 import { createBeneficiary, getAllBeneficiaries, getBeneficiaryById, updateBeneficiary, deleteBeneficiary } from '../services/beneficiary.service.js';
 
 export const createBeneficiaryController = async (req: Request, res: Response) => {

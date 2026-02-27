@@ -5,7 +5,7 @@ import {
   getIssueByIdController,
   updateIssueController,
   deleteIssueController
-} from '../controllers/issueController.js';
+} from '../controllers/issue.controller.js';
 import auth from '../middleware/auth.js';
 
 const router = express.Router();

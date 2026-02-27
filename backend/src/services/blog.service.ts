@@ -1,6 +1,6 @@
 import BlogPost from '../models/BlogPost.js';
 import type { IBlogPost } from '../models/BlogPost.js';
-import type { CreateBlogPostData, UpdateBlogPostData, GetBlogPostsQuery } from '../types/blog.schemas.js';
+import type { CreateBlogPostData, UpdateBlogPostData, GetBlogPostsQuery } from '../validations/blog.schemas.js';
 
 export interface PaginatedBlogPosts {
   posts: IBlogPost[];

@@ -6,7 +6,7 @@ import {
   getWaterTestByIdController,
   updateWaterTestController, 
   deleteWaterTestController 
-} from '../controllers/waterTestController.js';
+} from '../controllers/waterTest.controller.js';
 import auth from '../middleware/auth.js';
 
 const router = express.Router();

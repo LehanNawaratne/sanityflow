@@ -11,7 +11,7 @@ import {
   blogPostIdParamSchema,
   createBlogPostSchema,
   updateBlogPostSchema,
-} from "../types/blog.schemas.js";
+} from "../validations/blog.schemas.js";
 
 export const getAllBlogPostsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

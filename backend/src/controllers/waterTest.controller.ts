@@ -6,7 +6,7 @@ import {
   updateWaterTestService, 
   deleteWaterTestService,
   getWaterTestAnalyticsService
-} from '../services/waterTestService.js';
+} from '../services/waterTest.service.js';
 import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.validation.js';
 import { HTTP_STATUS } from '../constants/index.js';
 

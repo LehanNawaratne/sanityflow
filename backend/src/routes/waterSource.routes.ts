@@ -5,7 +5,7 @@ import {
   getWaterSourceByIdController,
   updateWaterSourceController,
   deleteWaterSourceController
-} from '../controllers/waterSourceController.js';
+} from '../controllers/waterSource.controller.js';
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
