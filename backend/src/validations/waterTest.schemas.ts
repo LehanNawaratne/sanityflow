@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from '../validations/waterTest.validation.js';
+import { createWaterTestSchema, updateWaterTestSchema, waterTestFilterSchema } from './waterTest.schema.js';
 
 export type WaterTestStatus = 'Safe' | 'Unsafe';
 

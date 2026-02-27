@@ -6,7 +6,7 @@ import {
   updateDistributionOrder, 
   updateDeliveryStatus, 
   deleteDistributionOrder 
-} from '../controllers/distributionOrderController.js';
+} from '../controllers/distributionOrder.controller.js';
 
 const router = express.Router();
 

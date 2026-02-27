@@ -5,7 +5,7 @@ import {
   getBeneficiaryByIdController,
   updateBeneficiaryController,
   deleteBeneficiaryController
-} from '../controllers/beneficiaryController.js';
+} from '../controllers/beneficiary.controller.js';
 
 const router = express.Router();
 

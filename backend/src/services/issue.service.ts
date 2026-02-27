@@ -1,6 +1,6 @@
 import Issue from '../models/Issue.js';
 import type { IIssue } from '../models/Issue.js';
-import type { CreateIssueData, UpdateIssueData, IssueFilters } from '../types/issueSchemas.js';
+import type { CreateIssueData, UpdateIssueData, IssueFilters } from '../validations/issue.schemas.js';
 
 const notFound = () => Object.assign(new Error('Issue not found'), { status: 404 });
 

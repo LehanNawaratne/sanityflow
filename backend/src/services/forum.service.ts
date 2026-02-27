@@ -4,7 +4,7 @@ import type { IForumThread } from '../models/ForumThread.js';
 import type { IForumReply } from '../models/ForumReply.js';
 import { AppError } from '../utils/errorHandler.js';
 import { HTTP_STATUS } from '../constants/index.js';
-import type { CreateThreadData, UpdateThreadData, CreateReplyData, GetThreadsQuery } from '../types/forum.schemas.js';
+import type { CreateThreadData, UpdateThreadData, CreateReplyData, GetThreadsQuery } from '../validations/forum.schemas.js';
 
 export interface PaginatedThreads {
   threads: IForumThread[];

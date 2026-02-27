@@ -5,9 +5,9 @@ import {
   getIssueByIdService,
   updateIssueService,
   deleteIssueService
-} from '../services/issueService.js';
-import { createIssueSchema, updateIssueSchema } from '../validations/issue.validation.js';
-import type { IssueFilters, IssueStatus, IssuePriority, IssueType } from '../types/issueSchemas.js';
+} from '../services/issue.service.js';
+import { createIssueSchema, updateIssueSchema } from '../validations/issue.schema.js';
+import type { IssueFilters, IssueStatus, IssuePriority, IssueType } from '../validations/issue.schemas.js';
 import { HTTP_STATUS } from '../constants/index.js';
 
 // POST /api/issues — Submit a new issue report

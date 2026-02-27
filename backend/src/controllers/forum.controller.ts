@@ -16,7 +16,7 @@ import {
   createThreadSchema,
   updateThreadSchema,
   createReplySchema,
-} from '../types/forum.schemas.js';
+} from '../validations/forum.schemas.js';
 
 export const getAllThreadsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -37,7 +37,7 @@ export const getThreadByIdHandler = async (req: Request, res: Response, next: Ne
 export const createThreadHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = createThreadSchema.parse(req.body);
-    const userId = req.userId!;
+    const userId = req.user.userId;
     const thread = await createThreadService(data, userId);
     res.status(201).json(thread);
   } catch (error) { next(error); }
@@ -47,7 +47,7 @@ export const updateThreadHandler = async (req: Request, res: Response, next: Nex
   try {
     const { id } = threadIdParamSchema.parse(req.params);
     const data = updateThreadSchema.parse(req.body);
-    const userId = req.userId!;
+    const userId = req.user.userId;
     const thread = await updateThreadService(id, data, userId);
     res.status(200).json(thread);
   } catch (error) { next(error); }
@@ -56,7 +56,7 @@ export const updateThreadHandler = async (req: Request, res: Response, next: Nex
 export const deleteThreadHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = threadIdParamSchema.parse(req.params);
-    const userId = req.userId!;
+    const userId = req.user.userId;
     await deleteThreadService(id, userId);
     res.status(204).send();
   } catch (error) { next(error); }
@@ -76,7 +76,7 @@ export const createReplyHandler = async (req: Request, res: Response, next: Next
   try {
     const { id } = threadIdParamSchema.parse(req.params);
     const data = createReplySchema.parse(req.body);
-    const userId = req.userId!;
+    const userId = req.user.userId;
     const reply = await createReplyService(id, data, userId);
     res.status(201).json(reply);
   } catch (error) { next(error); }
@@ -85,7 +85,7 @@ export const createReplyHandler = async (req: Request, res: Response, next: Next
 export const deleteReplyHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id, replyId } = replyParamSchema.parse(req.params);
-    const userId = req.userId!;
+    const userId = req.user.userId;
     await deleteReplyService(id, replyId, userId);
     res.status(204).send();
   } catch (error) { next(error); }

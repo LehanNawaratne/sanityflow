@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createDriverSchema, updateDriverSchema } from '../types/driverSchemas.js';
+import { createDriverSchema, updateDriverSchema } from '../validations/driver.schemas.js';
 import { createDriver, getAllDrivers, getDriverById, updateDriver, deleteDriver } from '../services/driver.service.js';
 
 export const createDriverController = async (req: Request, res: Response) => {

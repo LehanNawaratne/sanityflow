@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createIssueSchema, updateIssueSchema } from '../validations/issue.validation.js';
+import { createIssueSchema, updateIssueSchema } from './issue.schema.js';
 
 export type IssueType = 'Water Quality' | 'Water Shortage' | 'Infrastructure' | 'Other';
 export type IssuePriority = 'Low' | 'Medium' | 'High';
