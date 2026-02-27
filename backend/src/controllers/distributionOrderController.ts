@@ -11,8 +11,6 @@ export const createDistributionOrder = async (req: Request, res: Response, next:
 
       createdBy: (req as any).userId
 
-      createdBy: req.user.userId
-
     });
     res.status(HTTP_STATUS.CREATED).json(order);
   } catch (error) {
