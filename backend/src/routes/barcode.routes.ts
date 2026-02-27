@@ -4,6 +4,6 @@ import auth from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/barcode/:barcode", auth, lookupBarcodeController);
+router.get("/:barcode", auth, lookupBarcodeController);
 
 export default router;

@@ -41,7 +41,7 @@ app.use('/api/v1/drivers', driverRoutes);
 app.use('/api/v1/resources', resourceRoutes);
 app.use('/api/v1/suppliers', supplierRoutes);
 app.use('/api/v1/inventory-transactions', inventoryTransactionRoutes);
-app.use("/api", barcodeRoutes);
+app.use('/api/v1/barcode', barcodeRoutes);
 
 
 app.use(errorHandler);
