@@ -1,4 +1,6 @@
 import DistributionOrder from '../models/DistributionOrder.js';
+import { Resource } from '../models/resource.model.js';
+import { InventoryTransaction } from '../models/inventoryTransaction.model.js';
 import mongoose from 'mongoose';
 import { AppError } from '../utils/errorHandler.js';
 
@@ -9,15 +11,21 @@ export const createDistributionOrder = async (data: {
   notes?: string | undefined;
   createdBy: string;
 }) => {
-  // TODO: Check inventory stock availability (handled by inventory team)
-  
-  const order = await DistributionOrder.create({
-    ...data,
-    status: 'Pending'
+  const resource = await Resource.findById(data.resource);
+  if (!resource) throw new AppError(404, 'Resource not found');
+  if (resource.quantity < data.quantity) throw new AppError(400, 'Insufficient stock');
+
+  const order = await DistributionOrder.create({ ...data, status: 'Pending' });
+
+  await Resource.findByIdAndUpdate(data.resource, { $inc: { quantity: -data.quantity } });
+  await InventoryTransaction.create({
+    product: data.resource,
+    type: 'REMOVE',
+    quantity: data.quantity,
+    user: data.createdBy,
+    reason: `Distribution order ${order._id} created`
   });
-  
-  // TODO: Reserve/deduct inventory (handled by inventory team)
-  
+
   return order;
 };
 
@@ -115,8 +123,17 @@ export const deleteDistributionOrder = async (id: string) => {
   if (!order) {
     throw new AppError(404, 'Distribution order not found');
   }
-  
-  // TODO: Release reserved inventory (handled by inventory team)
-  
+
+  if (['Pending', 'Assigned'].includes(order.status)) {
+    await Resource.findByIdAndUpdate(order.resource, { $inc: { quantity: order.quantity } });
+    await InventoryTransaction.create({
+      product: order.resource,
+      type: 'ADD',
+      quantity: order.quantity,
+      user: order.createdBy,
+      reason: `Distribution order ${order._id} cancelled`
+    });
+  }
+
   return order;
 };

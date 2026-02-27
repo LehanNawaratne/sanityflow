@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 
 export interface IDistributionOrder extends Document {
-  resource: string;
+  resource: mongoose.Types.ObjectId;
   quantity: number;
   targetLocation: string;
   status: 'Pending' | 'Assigned' | 'In Transit' | 'Delivered' | 'Failed';
@@ -12,7 +12,7 @@ export interface IDistributionOrder extends Document {
 }
 
 const distributionOrderSchema = new mongoose.Schema<IDistributionOrder>({
-  resource: { type: String, required: true },
+  resource: { type: mongoose.Schema.Types.ObjectId, ref: 'Resource', required: true },
   quantity: { type: Number, required: true, min: 1 },
   targetLocation: { type: String, required: true },
   status: { 
