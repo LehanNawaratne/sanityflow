@@ -8,6 +8,7 @@ export const HTTP_STATUS = {
   NOT_FOUND: 404,
   CONFLICT: 409,
   INTERNAL_SERVER_ERROR: 500,
+  SERVICE_UNAVAILABLE: 503,
 } as const;
 
 export const JWT_EXPIRES_IN = '1d';

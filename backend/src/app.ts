@@ -13,9 +13,11 @@ import resourceRoutes from './routes/resource.routes.js';
 import inventoryTransactionRoutes from './routes/inventoryTransaction.routes.js';
 import supplierRoutes from './routes/supplier.routes.js';
 import barcodeRoutes from "./routes/barcode.routes.js";
+import aiRoutes from './routes/ai.routes.js';
 import errorHandler from './utils/errorHandler.js';
 import helmet from 'helmet';
 import morganMiddleware from './config/morgan.js';
+import apiRateLimiter from './middleware/rateLimit.js';
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morganMiddleware);
+app.use(apiRateLimiter);
 
 
 //routes
@@ -41,6 +44,7 @@ app.use('/api/v1/resources', resourceRoutes);
 app.use('/api/v1/suppliers', supplierRoutes);
 app.use('/api/v1/inventory-transactions', inventoryTransactionRoutes);
 app.use('/api/v1/barcode', barcodeRoutes);
+app.use('/api/v1/ai', aiRoutes);
 
 
 app.use(errorHandler);

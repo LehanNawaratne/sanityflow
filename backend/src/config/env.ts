@@ -11,6 +11,8 @@ const envSchema = z.object({
 
     FRONTEND_APP_ORIGIN: z.url(),
     BACKEND_APP_ORIGIN: z.url(),
+
+    GROQ_API_KEY: z.string().min(1),
 })
 
 const parseEnv = () => {
