@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosRequestConfig, Method } from "axios"
 import type { BaseQueryFn } from "@reduxjs/toolkit/query"
 import { httpClient } from "@/api/httpClient"
+import { logout } from "@/features/auth/authSlice"
 
 type AxiosBaseQueryArgs = {
   url: string
@@ -20,7 +21,7 @@ export const axiosBaseQuery = (): BaseQueryFn<
   unknown,
   AxiosBaseQueryError
 > => {
-  return async ({ url, method = "GET", data, params, headers }) => {
+  return async ({ url, method = "GET", data, params, headers }, api) => {
     try {
       const result = await httpClient({
         url,
@@ -33,6 +34,9 @@ export const axiosBaseQuery = (): BaseQueryFn<
       return { data: result.data }
     } catch (axiosError) {
       const error = axiosError as AxiosError
+      if (error.response?.status === 401) {
+        api.dispatch(logout())
+      }
       return {
         error: {
           status: error.response?.status,

@@ -1069,8 +1069,8 @@ export function DistributionDashboard() {
                             <p className="text-[11px] uppercase tracking-wide text-gray-500 mb-1">Beneficiaries</p>
                             {beneficiaryLabels.length > 0 ? (
                               <div className="flex flex-wrap gap-2">
-                                {beneficiaryLabels.map((label) => (
-                                  <span key={`${order._id}-${label}`} className="inline-flex items-center rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1">
+                                {beneficiaryLabels.map((label, index) => (
+                                  <span key={`${order._id}-${label}-${index}`} className="inline-flex items-center rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium px-2.5 py-1">
                                     {label}
                                   </span>
                                 ))}
